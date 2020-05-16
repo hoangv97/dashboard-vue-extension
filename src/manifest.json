@@ -1,0 +1,40 @@
+{
+  "name": "GohanVt",
+  "description": "A Vue.js web extension",
+  "version": null,
+  "manifest_version": 2,
+  "icons": {
+    "16": "icons/icon.png",
+    "48": "icons/icon.png",
+    "128": "icons/icon.png"
+  },
+  "browser_action": {
+    "default_title": "GohanVt",
+    "default_popup": "popup/popup.html"
+  },
+  "chrome_url_overrides": {
+    "newtab": "tab/tab.html"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "https://ajax.googleapis.com/",
+    "bookmarks",
+    "geolocation",
+    "notifications",
+    "topSites",
+    "contextMenus",
+    "unlimitedStorage",
+    "http://*/"
+  ],
+  "options_ui": {
+    "page": "options/options.html",
+    "chrome_style": true
+  }
+}
