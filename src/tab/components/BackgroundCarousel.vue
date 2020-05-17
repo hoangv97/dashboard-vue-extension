@@ -1,5 +1,5 @@
 <template>
-    <el-carousel trigger="click" arrow="never" :interval="30000">
+    <el-carousel trigger="click" arrow="never" :interval="carouselInterval">
         <el-carousel-item v-for="photo in photos" :key="photo.id">
             <div :style="{'background-image': `url('${photo._url}')`}" class="img">
                 <el-button class="dl-btn" icon="el-icon-download" circle @click="download(photo._download_url)"></el-button>
@@ -19,7 +19,6 @@ export default {
                 '49fdec799b581c290ed5c334dcf2f08f8e0df568ecaa0ac9fd132da4c86ff2cc',
                 '8a959ea115a3f08fcc08c334fa5edcb276153610a5eda71a3a678ae62fec1bff'
             ],
-            RANDOM_PHOTOS_NUMBER: 3,
         }
     },
     components: {
@@ -27,8 +26,9 @@ export default {
         [CarouselItem.name]: CarouselItem,
         [Button.name]: Button,
     },
+    props: ['carouselInterval', 'carouselPhotosNumber'],
     mounted() {
-        this.getRandomPhotos(this.RANDOM_PHOTOS_NUMBER)
+        this.getRandomPhotos(this.carouselPhotosNumber)
     },
     methods: {
         /*

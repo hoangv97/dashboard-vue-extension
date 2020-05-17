@@ -1,25 +1,25 @@
 <template>
     <div>
         <div class="background-container">
-            <background-carousel></background-carousel>
+            <background-carousel :carouselInterval="settings.backgroundCarousel.interval" :carouselPhotosNumber="settings.backgroundCarousel.photosNumber"></background-carousel>
         </div>
         <transition name="el-fade-in">
             <el-container v-show="settings.isShowContent">
                 <el-main class="main">
                     <el-row :gutter="10">
                         <el-col :span="7">
-                            <top-sites :cardOpacity="settings.cardOpacity"></top-sites>
+                            <top-sites :cardOpacity="settings.topSites.cardOpacity" :limit="settings.topSites.limit"></top-sites>
                         </el-col>
                         <el-col :span="7">
-                            <reminder :cardOpacity="settings.cardOpacity"></reminder>
+                            <reminder :cardOpacity="settings.reminder.cardOpacity"></reminder>
                         </el-col>
                         <el-col :span="10">
-                            <goodreads :cardOpacity="settings.cardOpacity"></goodreads>
+                            <goodreads :cardOpacity="settings.goodreads.cardOpacity" :carouselInterval="settings.goodreads.carouselInterval"></goodreads>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10" style="margin-top: 10px">
                         <el-col :span="18">
-                            <news :cardOpacity="settings.cardOpacity"></news>
+                            <news :cardOpacity="settings.news.cardOpacity"></news>
                         </el-col>
                     </el-row>
                 </el-main>
@@ -42,7 +42,24 @@ import News from './components/News'
 
 const DEFAULT_SETTINGS = {
     isShowContent: false,
-    cardOpacity: 0.85,
+    backgroundCarousel: {
+        interval: 15000,
+        photosNumber: 3,
+    },
+    topSites: {
+        limit: 10,
+        cardOpacity: 0.85,
+    },
+    reminder: {
+        cardOpacity: 0.85,
+    },
+    goodreads: {
+        carouselInterval: 10000,
+        cardOpacity: 0.9,
+    },
+    news: {
+        cardOpacity: 0.9,
+    }
 }
 const SETTINGS_STORAGE_KEY = 'settings'
 

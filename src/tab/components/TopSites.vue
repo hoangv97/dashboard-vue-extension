@@ -1,8 +1,8 @@
 <template>
     <el-card shadow="hover" :style="{opacity: cardOpacity}">
-        <div slot="header">
+        <!-- <div slot="header">
             <span>Top Sites</span>
-        </div>
+        </div> -->
         <div v-for="site in sites" :key="site.url" class="site-item">
             <el-link :href="site.url" :underline="false">{{ site.title }}</el-link>
         </div>
@@ -19,10 +19,9 @@ export default {
     data () {
         return {
             sites: [],
-            limit: 10,
         }
     },
-    props: ['cardOpacity'],
+    props: ['cardOpacity', 'limit'],
     mounted() {
         this.getTopSites()
     },

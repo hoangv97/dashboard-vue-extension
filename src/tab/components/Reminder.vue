@@ -1,8 +1,8 @@
 <template>
     <el-card shadow="hover" :style="{opacity: cardOpacity}">
-        <div slot="header">
+        <!-- <div slot="header">
             <span>Reminder</span>
-        </div>
+        </div> -->
         <div v-for="item in items" :key="item.id" class="item">
             <!-- <el-popover placement="top-start" :title="item.content" width="200" trigger="hover" content="Current streak: ">
                 <el-checkbox v-model="item.checked" class="checkbox" slot="reference">{{ item.content }}</el-checkbox>

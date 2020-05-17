@@ -1,8 +1,8 @@
 <template>
     <el-card shadow="hover" :style="{opacity: cardOpacity}">
-        <div slot="header">
+        <!-- <div slot="header">
             <el-link :underline="false" href="https://goodreads.com/">Goodreads</el-link>
-        </div>
+        </div> -->
         <el-tabs v-model="activeShelfName">
             <el-tab-pane v-for="shelf in shelves" :key="shelf.name" :name="shelf.name">
                 <span slot="label">
@@ -10,7 +10,7 @@
                         {{ shelf.title }}
                     </el-badge>
                 </span>
-                <el-carousel trigger="click" arrow="always" :interval="10000" type="card" indicator-position="none">
+                <el-carousel trigger="click" arrow="always" :interval="carouselInterval" type="card" indicator-position="none">
                     <el-carousel-item v-for="book in shelf.books" :key="book.id._">
                         <div :style="{'background-image': `url('${book.image_url}')`}" class="book-item" :title="book.title" @click="goToBook(book)">
                             
@@ -66,7 +66,7 @@ export default {
             activeShelfName: 'currently-reading',
         }
     },
-    props: ['cardOpacity'],
+    props: ['cardOpacity', 'carouselInterval'],
     mounted() {
         for (let shelf of this.shelves) {
             setTimeout(() => {
@@ -91,7 +91,7 @@ export default {
                 })
         },
         goToBook(book) {
-            window.location.href = book.link
+            // window.location.href = book.link
         }
     },
 }

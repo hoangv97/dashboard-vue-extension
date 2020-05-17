@@ -1,8 +1,8 @@
 <template>
     <el-card shadow="hover" :style="{opacity: cardOpacity}">
-        <div slot="header">
+        <!-- <div slot="header">
             <span>News</span>
-        </div>
+        </div> -->
         <el-tabs v-model="activeCategoryName">
             <el-tab-pane v-for="category in categories" :key="category.name" :name="category.name">
                 <span slot="label">
