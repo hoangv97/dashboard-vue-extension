@@ -43,7 +43,7 @@ import News from './components/News'
 const DEFAULT_SETTINGS = {
     isShowContent: false,
     backgroundCarousel: {
-        interval: 15000,
+        interval: 15 * 1000,
         photosNumber: 3,
     },
     topSites: {
@@ -54,7 +54,7 @@ const DEFAULT_SETTINGS = {
         cardOpacity: 0.85,
     },
     goodreads: {
-        carouselInterval: 10000,
+        carouselInterval: 10 * 1000,
         cardOpacity: 0.9,
     },
     news: {

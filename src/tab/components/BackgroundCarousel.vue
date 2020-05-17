@@ -50,20 +50,6 @@ export default {
                 })
         },
 
-        /*
-        get user's liked photos
-        order_by: latest, oldest, popular
-        */
-        getLikedPhotos(page = 1, per_page = 10, order_by = 'lastest', KEY_ID) {
-            if (!KEY_ID && this.UNSPLASH_IDS) {
-                KEY_ID = this.UNSPLASH_IDS[0]
-            }
-            axios.get(`https://api.unsplash.com/users/viethoang212/likes?client_id=${KEY_ID}&page=${page}&per_page=${per_page}&order_by=${order_by}`)
-                .then(res => {
-                    console.log(res)
-                })
-        },
-
         download(url) {
             let link = document.createElement('a')
             link.href = url

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-import helpers from './components/helper'
+import helpers from './lib/helper'
 
 const plugin = {
     install () {
