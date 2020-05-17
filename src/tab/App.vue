@@ -3,23 +3,49 @@
         <div class="background-container">
             <background-carousel></background-carousel>
         </div>
-        <el-container v-if="isShowContent">
-            <el-main class="main">
-                <el-row>
-                    <el-col :span="10" :offset="2">
-                        <top-sites :cardOpacity="cardOpacity"></top-sites>
-                    </el-col>
-                </el-row>
-            </el-main>
-        </el-container>
+        <transition name="el-fade-in">
+            <el-container v-show="settings.isShowContent">
+                <el-main class="main">
+                    <el-row :gutter="10">
+                        <el-col :span="7">
+                            <top-sites :cardOpacity="settings.cardOpacity"></top-sites>
+                        </el-col>
+                        <el-col :span="7">
+                            <reminder :cardOpacity="settings.cardOpacity"></reminder>
+                        </el-col>
+                        <el-col :span="10">
+                            <goodreads :cardOpacity="settings.cardOpacity"></goodreads>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="10" style="margin-top: 10px">
+                        <el-col :span="18">
+                            <news :cardOpacity="settings.cardOpacity"></news>
+                        </el-col>
+                    </el-row>
+                </el-main>
+            </el-container>
+        </transition>
         <el-button class="toggle-content-btn" icon="el-icon-view" circle @click="toggleContent()"></el-button>
     </div>
 </template>
 
 <script>
 import {Container, Main, Row, Col, Button} from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/base.css'
+
 import BackgroundCarousel from './components/BackgroundCarousel'
 import TopSites from './components/TopSites'
+import Reminder from './components/Reminder'
+import Goodreads from './components/Goodreads'
+import News from './components/News'
+
+const DEFAULT_SETTINGS = {
+    isShowContent: false,
+    cardOpacity: 0.85,
+}
+const SETTINGS_STORAGE_KEY = 'settings'
+
 export default {
     components: {
         [Container.name]: Container,
@@ -30,16 +56,27 @@ export default {
 
         BackgroundCarousel,
         TopSites,
+        Reminder,
+        Goodreads,
+        News,
     },
     data () {
         return {
-            isShowContent: true,
-            cardOpacity: 0.85,
+            settings: this.$helpers.getLocalStorage(SETTINGS_STORAGE_KEY, DEFAULT_SETTINGS),
         }
     },
     methods: {
         toggleContent() {
-            this.isShowContent = !this.isShowContent
+            this.settings.isShowContent = !this.settings.isShowContent
+        },
+    },
+    watch: {
+        settings: {
+            handler: function(newSettings) {
+                // console.log(newSettings)
+                this.$helpers.setLocalStorage(SETTINGS_STORAGE_KEY, newSettings)
+            },
+            deep: true,
         }
     },
 }
@@ -59,5 +96,6 @@ export default {
     z-index 999
 
 .main
-    padding-top 25px
+    padding 25px 5%
+    max-height calc(100vh - 30px)
 </style>

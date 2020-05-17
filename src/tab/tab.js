@@ -1,6 +1,14 @@
 import Vue from 'vue'
 import App from './App'
-import 'element-ui/lib/theme-chalk/index.css'
+import helpers from './components/helper'
+
+const plugin = {
+    install () {
+      Vue.helpers = helpers
+      Vue.prototype.$helpers = helpers
+    }
+}
+Vue.use(plugin)
 
 new Vue({
     el: '#app',

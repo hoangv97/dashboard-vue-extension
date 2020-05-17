@@ -1,5 +1,5 @@
 <template>
-    <el-carousel trigger="click" arrow="never" :interval="60000">
+    <el-carousel trigger="click" arrow="never" :interval="30000">
         <el-carousel-item v-for="photo in photos" :key="photo.id">
             <div :style="{'background-image': `url('${photo._url}')`}" class="img">
                 <el-button class="dl-btn" icon="el-icon-download" circle @click="download(photo._download_url)"></el-button>
