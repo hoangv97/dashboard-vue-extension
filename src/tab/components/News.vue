@@ -19,7 +19,7 @@
                             </el-col>
                             <el-col :span="20">
                                 <div v-html="article.description ? article.description : article.content"></div>
-                                <div style="color: #909399">{{ article.source.name }} <span v-if="article.author"> - {{ article.author }}</span> - {{ article.publishedAt | time }}</div>
+                                <div style="color: #909399">{{ article.source.name }} <span v-if="article.author"> - <span v-html="article.author"></span></span> - {{ article.publishedAt | time }}</div>
                                 <el-link :underline="false" :href="article.url">Read more<i class="el-icon-arrow-right el-icon--right"></i> </el-link>
                             </el-col>
                         </el-row>
@@ -72,7 +72,7 @@ export default {
     },
     methods: {
         getTopHeadlines(categoryName) {
-            axios.get(`https://newsapi.org/v2/top-headlines?country=${NEWSAPI_COUNTRY}&category=${categoryName}&apiKey=${NEWSAPI_KEY}`)
+            axios.get(`https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/top-headlines?country=${NEWSAPI_COUNTRY}&category=${categoryName}&apiKey=${NEWSAPI_KEY}`)
                 .then(res => {
                     console.log(res)
                     let categoryId = this.categories.findIndex(s => s.name === categoryName)

@@ -1,23 +1,20 @@
 <template>
-    <el-card shadow="hover" :style="{opacity: cardOpacity}">
-        <!-- <div slot="header">
-            <span>Reminder</span>
-        </div> -->
-        <div v-for="item in items" :key="item.id" class="item">
-            <!-- <el-popover placement="top-start" :title="item.content" width="200" trigger="hover" content="Current streak: ">
-                <el-checkbox v-model="item.checked" class="checkbox" slot="reference">{{ item.content }}</el-checkbox>
-            </el-popover> -->
-            <el-checkbox v-model="item.checked" class="checkbox" @change="checkItem(item)">{{ item.content }}</el-checkbox>
-            <el-popconfirm title="Are you sure to delete this?" confirmButtonText="Yes" cancelButtonText="No" icon="el-icon-info" iconColor="red" @onConfirm="removeItem(item)">
-                <i class="el-icon-close remove-item" slot="reference"></i>
-            </el-popconfirm>
-        </div>
+    <el-card shadow="hover" :style="{opacity: cardOpacity}" class="card">
+        <el-tree :data="items" :props="defaultProps" show-checkbox node-key="id" 
+            @check-change="handleCheckChange" :default-checked-keys="defaultCheckedKeys">
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+                <span>{{ node.label }}</span>
+                <el-popconfirm title="Are you sure to delete this?" confirmButtonText="Yes" cancelButtonText="No" icon="el-icon-info" iconColor="red" @onConfirm="removeItem(node, data)">
+                    <i class="el-icon-close remove-item" slot="reference"></i>
+                </el-popconfirm>
+            </span>
+        </el-tree>
         <el-input placeholder="..." v-model="input" @change="addInput" :clearable="true" suffix-icon="el-icon-edit" class="input"></el-input>
     </el-card>
 </template>
 
 <script>
-import {Card, Checkbox, Input, Popover, Button, Popconfirm,} from 'element-ui'
+import {Card, Checkbox, Input, Popover, Button, Popconfirm, Tree} from 'element-ui'
 
 const ITEMS_STORAGE_KEY = 'reminder'
 const LAST_DATE_STORAGE_KEY = 'reminder_last_date'
@@ -30,11 +27,17 @@ export default {
         [Popover.name]: Popover,
         [Button.name]: Button,
         [Popconfirm.name]: Popconfirm,
+        [Tree.name]: Tree,
     },
     data () {
         return {
             items: this.$helpers.getLocalStorage(ITEMS_STORAGE_KEY, []),
+            defaultCheckedKeys: [],
             input: '',
+            defaultProps: {
+                label: 'content',
+                children: 'children',
+            }
         }
     },
     props: ['cardOpacity'],
@@ -47,6 +50,7 @@ export default {
                 return i
             })
         }
+        this.defaultCheckedKeys = this.items.filter(i => i.checked).map(i => i.id)
         this.$helpers.setLocalStorage(LAST_DATE_STORAGE_KEY, today)
     },
     methods: {
@@ -62,22 +66,25 @@ export default {
             // console.log(this.items, this.input)
             this.input = ''
         },
-        removeItem(item) {
-            // console.log(item)
-            this.items = this.items.filter(i => i.id != item.id).map((item, id) => {
+        removeItem(node, data) {
+            // console.log(node, data)
+            this.items = this.items.filter(i => i.id != data.id).map((item, id) => {
                 item.id = id // recalculate id
                 return item
             })
         },
-        checkItem(item) {
-            // console.log(item)
+        handleCheckChange(data, checked, indeterminate) {
+            // console.log(data, checked, indeterminate)
+            let item = this.items.find(i => i.id === data.id)
+            if (!item) return
+            item.checked = checked
             let today = (new Date()).toISOString().slice(0, 10)
             if (item.checked && !item.history.includes(today)) {
                 item.history.push(today)
             } else if (!item.checked) {
                 item.history = item.history.filter(d => d !== today)
             }
-        }
+        },
     },
     watch: {
         items: {
@@ -92,11 +99,16 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.item
-    margin-bottom 10px
+.custom-tree-node 
+    flex 1
+    display flex
+    align-items center
+    justify-content space-between
+    font-size 14px
+    padding-right 8px
 
-    .checkbox
-        width calc(100% - 16px)
+.card >>> .el-tree-node__expand-icon
+    display none 
 
 .input
     margin-top 10px
