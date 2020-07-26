@@ -72,7 +72,7 @@ export default {
     },
     methods: {
         getTopHeadlines(categoryName) {
-            axios.get(`https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/top-headlines?country=${NEWSAPI_COUNTRY}&category=${categoryName}&apiKey=${NEWSAPI_KEY}`)
+            axios.get(`https://newsapi.org/v2/top-headlines?country=${NEWSAPI_COUNTRY}&category=${categoryName}&apiKey=${NEWSAPI_KEY}`)
                 .then(res => {
                     console.log(res)
                     let categoryId = this.categories.findIndex(s => s.name === categoryName)

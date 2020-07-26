@@ -76,7 +76,7 @@ export default {
     },
     methods: {
         getShelf(shelfName) {
-            axios.get(`https://cors-anywhere.herokuapp.com/https://www.goodreads.com/review/list/${GOODREADS_USER_ID}.xml?shelf=${shelfName}&per_page=200&key=${GOODREADS_API}&v=2`)
+            axios.get(`https://www.goodreads.com/review/list/${GOODREADS_USER_ID}.xml?shelf=${shelfName}&per_page=200&key=${GOODREADS_API}&v=2`)
                 .then(res => {
                     // console.log(res)
                     parseString(res.data, {trim: true, explicitArray: false}, (err, result) => {
