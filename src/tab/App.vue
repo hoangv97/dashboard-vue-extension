@@ -7,18 +7,15 @@
             <el-container v-show="settings.isShowContent">
                 <el-main class="main">
                     <el-row :gutter="10">
-                        <el-col :span="7">
-                            <top-sites :cardOpacity="settings.topSites.cardOpacity" :limit="settings.topSites.limit"></top-sites>
+                        <el-col :span="9">
+                            <div>
+                                <top-sites :cardOpacity="settings.topSites.cardOpacity" :limit="settings.topSites.limit"></top-sites>
+                            </div>
+                            <div style="margin-top: 10px">
+                                <goodreads :cardOpacity="settings.goodreads.cardOpacity" :carouselInterval="settings.goodreads.carouselInterval"></goodreads>
+                            </div>
                         </el-col>
-                        <el-col :span="7">
-                            <reminder :cardOpacity="settings.reminder.cardOpacity"></reminder>
-                        </el-col>
-                        <el-col :span="10">
-                            <goodreads :cardOpacity="settings.goodreads.cardOpacity" :carouselInterval="settings.goodreads.carouselInterval"></goodreads>
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="10" style="margin-top: 10px">
-                        <el-col :span="18">
+                        <el-col :span="15">
                             <news :cardOpacity="settings.news.cardOpacity"></news>
                         </el-col>
                     </el-row>
