@@ -66,7 +66,7 @@ export default {
             activeShelfName: 'currently-reading',
         }
     },
-    props: ['cardOpacity', 'carouselInterval'],
+    props: ['cardOpacity', 'carouselInterval', 'cacheTimeout'],
     mounted() {
         for (let shelf of this.shelves) {
             setTimeout(() => {
@@ -75,20 +75,31 @@ export default {
         }
     },
     methods: {
+        putBooksToShelf(shelfName, books) {
+            let shelfId = this.shelves.findIndex(s => s.name === shelfName)
+            if (shelfId >= 0) {
+                this.shelves[shelfId].books = books
+            }
+        },
         getShelf(shelfName) {
-            axios.get(`https://www.goodreads.com/review/list/${GOODREADS_USER_ID}.xml?shelf=${shelfName}&per_page=200&key=${GOODREADS_API}&v=2`)
-                .then(res => {
-                    // console.log(res)
-                    parseString(res.data, {trim: true, explicitArray: false}, (err, result) => {
-                        // console.log(result)
-                        let books = result.GoodreadsResponse.reviews.review.map(r => r.book)
-                        console.log(books)
-                        let shelfId = this.shelves.findIndex(s => s.name === shelfName)
-                        if (shelfId >= 0) {
-                            this.shelves[shelfId].books = books
-                        }
+            let cacheKey = 'goodreads_' + shelfName
+            let cacheTimeout = this.cacheTimeout || 1000
+            let books = this.$helpers.getLocalStorage(cacheKey)
+            if (books) {
+                this.putBooksToShelf(shelfName, books)
+            } else {
+                axios.get(`https://www.goodreads.com/review/list/${GOODREADS_USER_ID}.xml?shelf=${shelfName}&per_page=200&key=${GOODREADS_API}&v=2`)
+                    .then(res => {
+                        // console.log(res)
+                        parseString(res.data, {trim: true, explicitArray: false}, (err, result) => {
+                            // console.log(result)
+                            let books = result.GoodreadsResponse.reviews.review.map(r => r.book)
+                            // console.log(books)
+                            this.putBooksToShelf(shelfName, books)
+                            this.$helpers.setLocalStorage(cacheKey, books, cacheTimeout)
+                        })
                     })
-                })
+            }
         },
         goToBook(book) {
             // window.location.href = book.link

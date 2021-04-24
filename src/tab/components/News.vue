@@ -62,7 +62,7 @@ export default {
             activeCategoryName: NEWSAPI_CATEGORIES[0],
         }
     },
-    props: ['cardOpacity'],
+    props: ['cardOpacity', 'cacheTimeout'],
     mounted() {
         for (let category of this.categories) {
             setTimeout(() => {
@@ -71,16 +71,27 @@ export default {
         }
     },
     methods: {
+        setArticlesToCategory(categoryName, result) {
+            let categoryId = this.categories.findIndex(s => s.name === categoryName)
+            if (categoryId >= 0) {
+                this.categories[categoryId].articles = result.data.articles
+                this.categories[categoryId].activeTitles = this.categories[categoryId].articles.map(a => a.title)
+            }
+        },
         getTopHeadlines(categoryName) {
-            axios.get(`https://newsapi.org/v2/top-headlines?country=${NEWSAPI_COUNTRY}&category=${categoryName}&apiKey=${NEWSAPI_KEY}`)
-                .then(res => {
-                    console.log(res)
-                    let categoryId = this.categories.findIndex(s => s.name === categoryName)
-                    if (categoryId >= 0) {
-                        this.categories[categoryId].articles = res.data.articles
-                        this.categories[categoryId].activeTitles = this.categories[categoryId].articles.map(a => a.title)
-                    }
-                })
+            let cacheKey = 'news_top-headlines_' + categoryName
+            let cacheTimeout = this.cacheTimeout || 1000
+            let result = this.$helpers.getLocalStorage(cacheKey)
+            if (result) {
+                this.setArticlesToCategory(categoryName, result)
+            } else {
+                axios.get(`https://newsapi.org/v2/top-headlines?country=${NEWSAPI_COUNTRY}&category=${categoryName}&apiKey=${NEWSAPI_KEY}`)
+                    .then(res => {
+                        // console.log(res)
+                        this.setArticlesToCategory(categoryName, res)
+                        this.$helpers.setLocalStorage(cacheKey, res, cacheTimeout)
+                    })
+            }
         }
     },
     filters: {

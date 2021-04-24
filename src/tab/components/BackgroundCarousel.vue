@@ -26,28 +26,39 @@ export default {
         [CarouselItem.name]: CarouselItem,
         [Button.name]: Button,
     },
-    props: ['carouselInterval', 'carouselPhotosNumber'],
+    props: ['carouselInterval', 'carouselPhotosNumber', 'cacheTimeout'],
     mounted() {
         this.getRandomPhotos(this.carouselPhotosNumber)
     },
     methods: {
+        setBackground(result) {
+            this.photos = result.data.map(d => {
+                d._url = d.urls.regular
+                d._download_url = `${d.links.download}?force=true`
+                return d
+            })
+        },
         /*
         Unsplash API            
         Get random photos
         */
         getRandomPhotos(number, KEY_ID) {
-            if (!KEY_ID && this.UNSPLASH_IDS) {
-                KEY_ID = this.UNSPLASH_IDS[1]
-            }
-            axios.get(`https://api.unsplash.com/photos/random?client_id=${KEY_ID}&orientation=landscape&count=${number}`)
-                .then(res => {
-                    console.log(res)
-                    this.photos = res.data.map(d => {
-                        d._url = d.urls.regular
-                        d._download_url = `${d.links.download}?force=true`
-                        return d
+            let cacheKey = 'bgCarousel'
+            let cacheTimeout = this.cacheTimeout || 1000
+            let result = this.$helpers.getLocalStorage(cacheKey)
+            if (result) {
+                this.setBackground(result)
+            } else {
+                if (!KEY_ID && this.UNSPLASH_IDS) {
+                    KEY_ID = this.UNSPLASH_IDS[1]
+                }
+                axios.get(`https://api.unsplash.com/photos/random?client_id=${KEY_ID}&orientation=landscape&count=${number}`)
+                    .then(res => {
+                        // console.log(res)
+                        this.setBackground(res)
+                        this.$helpers.setLocalStorage(cacheKey, res, cacheTimeout)
                     })
-                })
+            }
         },
 
         download(url) {

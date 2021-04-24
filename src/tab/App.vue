@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="background-container">
-            <background-carousel :carouselInterval="settings.backgroundCarousel.interval" :carouselPhotosNumber="settings.backgroundCarousel.photosNumber"></background-carousel>
+            <background-carousel :carouselInterval="settings.backgroundCarousel.interval" :carouselPhotosNumber="settings.backgroundCarousel.photosNumber" :cacheTimeout="settings.backgroundCarousel.cacheTimeout"></background-carousel>
         </div>
         <transition name="el-fade-in">
             <el-container v-show="settings.isShowContent">
@@ -12,11 +12,11 @@
                                 <top-sites :cardOpacity="settings.topSites.cardOpacity" :limit="settings.topSites.limit"></top-sites>
                             </div>
                             <div style="margin-top: 10px">
-                                <goodreads :cardOpacity="settings.goodreads.cardOpacity" :carouselInterval="settings.goodreads.carouselInterval"></goodreads>
+                                <goodreads :cardOpacity="settings.goodreads.cardOpacity" :carouselInterval="settings.goodreads.carouselInterval" :cacheTimeout="settings.goodreads.cacheTimeout"></goodreads>
                             </div>
                         </el-col>
                         <el-col :span="15">
-                            <news :cardOpacity="settings.news.cardOpacity"></news>
+                            <news :cardOpacity="settings.news.cardOpacity" :cacheTimeout="settings.news.cacheTimeout"></news>
                         </el-col>
                     </el-row>
                 </el-main>
@@ -43,6 +43,7 @@ const DEFAULT_SETTINGS = {
     backgroundCarousel: {
         interval: 15 * 1000,
         photosNumber: 3,
+        cacheTimeout: 1 * 60 * 1000,
     },
     topSites: {
         limit: 10,
@@ -54,9 +55,11 @@ const DEFAULT_SETTINGS = {
     goodreads: {
         carouselInterval: 10 * 1000,
         cardOpacity: 0.9,
+        cacheTimeout: 60 * 60 * 1000,
     },
     news: {
         cardOpacity: 0.9,
+        cacheTimeout: 30 * 60 * 1000,
     }
 }
 const SETTINGS_STORAGE_KEY = 'settings'
