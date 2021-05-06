@@ -11,7 +11,7 @@
                 <el-collapse v-model="category.activeTitles">
                     <el-collapse-item v-for="article in category.articles" :key="article.url" :name="article.title" class="article">
                         <template slot="title">
-                            <el-link :underline="false">{{ article.title }}</el-link>
+                            <el-link :underline="false" :title="article.title">{{ article.title }}</el-link>
                         </template>
                         <el-row :gutter="10">
                             <el-col :span="4">
@@ -111,4 +111,5 @@ export default {
 <style lang="stylus" scoped>
 .article >>> .el-link--inner
     max-height 48px
+    overflow-y hidden
 </style>
