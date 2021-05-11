@@ -37,7 +37,8 @@
     "contextMenus",
     "unlimitedStorage",
     "https://ajax.googleapis.com/",
-    "http://*/"
+    "http://*/",
+    "chrome://favicon/"
   ],
   "options_ui": {
     "page": "options/options.html",

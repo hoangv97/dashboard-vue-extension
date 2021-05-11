@@ -33,6 +33,7 @@ import 'element-ui/lib/theme-chalk/base.css'
 // import 'element-theme-dark'
 
 import BackgroundCarousel from './components/BackgroundCarousel'
+import Bookmark from './components/Bookmark'
 import TopSites from './components/TopSites'
 import Reminder from './components/Reminder'
 import Goodreads from './components/Goodreads'
@@ -44,6 +45,9 @@ const DEFAULT_SETTINGS = {
         interval: 15 * 1000,
         photosNumber: 3,
         cacheTimeout: 1 * 60 * 1000,
+    },
+    bookmark: {
+        cardOpacity: 0.85,
     },
     topSites: {
         limit: 10,
@@ -73,6 +77,7 @@ export default {
         [Button.name]: Button,
 
         BackgroundCarousel,
+        Bookmark,
         TopSites,
         Reminder,
         Goodreads,

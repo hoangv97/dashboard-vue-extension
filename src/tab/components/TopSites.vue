@@ -28,7 +28,7 @@ export default {
     methods: {
         getTopSites() {
             chrome.topSites.get(results => {
-                console.log(results)
+                // console.log(results)
                 this.sites = results.filter(s => !s.url.includes('localhost'))
                     .slice(0, this.limit)
             })
