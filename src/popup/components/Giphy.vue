@@ -1,29 +1,40 @@
 <template>
-    <a :href="image.source" target="blank"><img :src="image.src" alt=""></a>
+    <div>
+        <a :href="image.source" target="blank"><img :src="image.src" alt=""></a>
+        <div>
+            <el-button @click="load" type="text">Reload</el-button>
+        </div>
+    </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { Button } from 'element-ui'
 
 const GIPHY_API = '6mlq70APvD72Bm77rqmkVrmttclKv9JU'
-const GIPHY_TAGS = [
-    'cat', 'dog',
-]
 
 export default {
     components: {
+        [Button.name]: Button,
     },
     data () {
         return {
+            tagList: [],
             image: {
                 src: '',
                 source: '',
-            }
+            },
         }
     },
-    props: [],
+    props: {
+        tags: {
+            type: String,
+            required: true,
+        },
+    },
     mounted() {
-        this.getRandomGif(this.random(GIPHY_TAGS))
+        this.tagList = this.tags.split(',')
+        this.load()
     },
     methods: {
         getRandomGif(tag) {
@@ -37,7 +48,10 @@ export default {
         },
         random(array) {
             return array[Math.floor(Math.random() * array.length)]
-        }
+        },
+        load() {
+            this.getRandomGif(this.random(this.tagList))
+        },
     },
 }
 </script>

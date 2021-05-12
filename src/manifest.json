@@ -36,8 +36,10 @@
     "topSites",
     "contextMenus",
     "unlimitedStorage",
+    "scripting",
     "https://ajax.googleapis.com/",
-    "http://*/",
+    "https://*/*",
+    "http://*/*",
     "chrome://favicon/"
   ],
   "options_ui": {
