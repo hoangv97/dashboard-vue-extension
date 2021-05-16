@@ -37,7 +37,7 @@ import Bookmark from './components/Bookmark'
 import TopSites from './components/TopSites'
 import Reminder from './components/Reminder'
 import Goodreads from './components/Goodreads'
-import News from './components/News'
+import News from './components/news/Main'
 
 const DEFAULT_SETTINGS = {
     isShowContent: false,

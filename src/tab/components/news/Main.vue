@@ -1,30 +1,16 @@
 <template>
-    <el-card shadow="hover" :style="{opacity: cardOpacity}">
-        <!-- <div slot="header">
-            <span>News</span>
-        </div> -->
+    <el-card :style="{opacity: cardOpacity}">
         <el-tabs v-model="activeCategoryName">
             <el-tab-pane v-for="category in categories" :key="category.name" :name="category.name">
                 <span slot="label">
                     {{ category.name | capitalize }}
                 </span>
-                <el-collapse v-model="category.activeTitles">
-                    <el-collapse-item v-for="article in category.articles" :key="article.url" :name="article.title" class="article">
-                        <template slot="title">
-                            <el-link :underline="false" :title="article.title">{{ article.title }}</el-link>
-                        </template>
-                        <el-row :gutter="10">
-                            <el-col :span="4">
-                                <el-image :src="article.urlToImage" fit="cover" style="width: 100%"></el-image>
-                            </el-col>
-                            <el-col :span="20">
-                                <div v-html="article.description ? article.description : article.content"></div>
-                                <div style="color: #909399">{{ article.source.name }} <span v-if="article.author"> - <span v-html="article.author"></span></span> - {{ article.publishedAt | time }}</div>
-                                <el-link :underline="false" :href="article.url">Read more<i class="el-icon-arrow-right el-icon--right"></i> </el-link>
-                            </el-col>
-                        </el-row>
-                    </el-collapse-item>
-                </el-collapse>
+                <article-group :articles="category.articles" :cols="articleColNum"></article-group>
+            </el-tab-pane>
+            <el-tab-pane name="search">
+                <span slot="label"><i class="el-icon-search"></i></span>
+                <el-input placeholder="Type something" :prefix-icon="'el-icon-' + (search.loading ? 'loading' : 'search')" v-model="search.query" @change="getQueryNews" size="small" class="search-input" clearable></el-input>
+                <article-group :articles="search.articles" :cols="articleColNum"></article-group>
             </el-tab-pane>
         </el-tabs>
     </el-card>
@@ -32,11 +18,16 @@
 
 <script>
 import axios from 'axios'
-import {Card, Button, Badge, Link, Tabs, TabPane, Collapse, CollapseItem, Image, Row, Col} from 'element-ui'
+import {Card, Button, Badge, Link, Tabs, TabPane, Collapse, CollapseItem, Image, Row, Col, Input} from 'element-ui'
+import ArticleGroup from './ArticleGroup'
 
 const NEWSAPI_KEY = '09875061c8604df6ad93566a4e876305'
-const NEWSAPI_CATEGORIES = ['general', 'business', 'technology', 'entertainment', 'health', 'science', 'sports',]
+const NEWSAPI_CATEGORIES = [
+    'general', 'business', 'technology', 'entertainment', 'health', 'science', 
+    // 'sports',
+]
 const NEWSAPI_COUNTRY = 'us'
+const NEWSAPI_LANGUAGE = 'en'
 
 export default {
     components: {
@@ -51,15 +42,23 @@ export default {
         [Image.name]: Image,
         [Row.name]: Row,
         [Col.name]: Col,
+        [Input.name]: Input,
+
+        ArticleGroup,
     },
     data () {
         return {
             categories: NEWSAPI_CATEGORIES.map(c => ({
                 name: c,
                 articles: [],
-                activeTitles: [], // used to open all collapse items
             })),
             activeCategoryName: NEWSAPI_CATEGORIES[0],
+            articleColNum: 3, // 1, 2, 3, 4, 6, 8
+            search: {
+                loading: false,
+                query: '',
+                articles: [],
+            },
         }
     },
     props: ['cardOpacity', 'cacheTimeout'],
@@ -75,7 +74,6 @@ export default {
             let categoryId = this.categories.findIndex(s => s.name === categoryName)
             if (categoryId >= 0) {
                 this.categories[categoryId].articles = result.data.articles
-                this.categories[categoryId].activeTitles = this.categories[categoryId].articles.map(a => a.title)
             }
         },
         getTopHeadlines(categoryName) {
@@ -92,6 +90,20 @@ export default {
                         this.$helpers.setLocalStorage(cacheKey, res, cacheTimeout)
                     })
             }
+        },
+        getQueryNews() {
+            if (!this.search.query || this.search.query === '') {
+                this.$set(this.search, 'loading', false)
+                this.$set(this.search, 'articles', [])
+                return
+            }
+            this.$set(this.search, 'loading', true)
+            axios.get(`https://newsapi.org/v2/everything?language=${NEWSAPI_LANGUAGE}&q=${this.search.query}&apiKey=${NEWSAPI_KEY}&pageSize=15`)
+                .then(res => {
+                    // console.log(res)
+                    this.$set(this.search, 'loading', false)
+                    this.$set(this.search, 'articles', res.data.articles)
+                })
         }
     },
     filters: {
@@ -100,16 +112,12 @@ export default {
             value = value.toString()
             return value.charAt(0).toUpperCase() + value.slice(1)
         },
-        time: function (value) {
-            if (!value) return ''
-            return (new Date(value)).toUTCString()
-        },
     }
 }
 </script>
 
 <style lang="stylus" scoped>
-.article >>> .el-link--inner
-    max-height 48px
-    overflow-y hidden
+.search-input
+    max-width 50%
+    margin-bottom 10px
 </style>

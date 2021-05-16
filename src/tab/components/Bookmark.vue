@@ -2,14 +2,14 @@
     <el-card shadow="hover" :style="{opacity: cardOpacity}">
         <div v-for="(folder, i) in folders" :key="i">
             <el-divider content-position="left">
-                <div class="folder-title" @click="toggleFolder(i)">{{ folder.title }}</div>
+                <div :class="{'folder-title': canToggleFolder(i)}" class="noselect" @click="toggleFolder(i)">{{ folder.title }}</div>
             </el-divider>
             <el-collapse-transition>
                 <el-row :gutter="10" v-show="folder.show">
-                    <el-col :span="3" v-for="(site, i) in folder.sites" :key="i" style="text-align: center">
+                    <el-col :span="3" v-for="(site, j) in folder.sites" :key="j" style="text-align: center">
                         <a :href="site.url" :title="site.title">
                             <el-card :body-style="{ padding: '0px' }" shadow="hover">
-                                <el-image :src="'chrome://favicon/size/' + faviconSize + '@1px/' + site.url" fit="fit"></el-image>
+                                <el-image :src="'chrome://favicon/size/' + faviconSize + '@1px/' + site.url" :style="{'min-height': faviconSize + 'px'}" fit="fit"></el-image>
                                 <el-button type="text" size="mini">{{ site.title }}</el-button>
                             </el-card>
                         </a>
@@ -38,7 +38,8 @@ export default {
     data () {
         return {
             folders: [],
-            faviconSize: 32,
+            faviconSize: 24,
+            alwaysShowFolderNames: ['Top Sites', "Bookmarks"]
         }
     },
     props: {
@@ -88,8 +89,14 @@ export default {
             })
         },
         toggleFolder(i) {
+            if (!this.canToggleFolder(i)) {
+                return
+            }
             this.folders[i].show = !this.folders[i].show
-        }
+        },
+        canToggleFolder(i) {
+            return !this.alwaysShowFolderNames.includes(this.folders[i].title)
+        },
     },
 }
 </script>
@@ -100,6 +107,14 @@ export default {
 
 .folder-title
     cursor pointer
+
+.noselect 
+    -webkit-touch-callout none
+    -webkit-user-select none
+    -khtml-user-select none
+    -moz-user-select none
+    -ms-user-select none
+    user-select none
 
 .el-col
     margin-bottom 3px
