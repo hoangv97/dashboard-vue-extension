@@ -9,7 +9,7 @@
                     <el-row :gutter="10">
                         <el-col :span="9">
                             <div>
-                                <top-sites :cardOpacity="settings.topSites.cardOpacity" :limit="settings.topSites.limit"></top-sites>
+                                <bookmark :cardOpacity="settings.bookmark.cardOpacity"></bookmark>
                             </div>
                             <div style="margin-top: 10px">
                                 <goodreads :cardOpacity="settings.goodreads.cardOpacity" :carouselInterval="settings.goodreads.carouselInterval" :cacheTimeout="settings.goodreads.cacheTimeout"></goodreads>

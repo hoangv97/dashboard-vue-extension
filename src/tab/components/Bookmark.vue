@@ -1,20 +1,29 @@
 <template>
     <el-card shadow="hover" :style="{opacity: cardOpacity}">
-        <el-row gutter="10">
-            <el-col :span="2" v-for="(site, i) in sites" :key="i">
-                <el-link :href="site.url" :underline="false" :title="site | fullTitle">
-                    <el-card :body-style="{ padding: '0px', 'max-width': '200px', 'max-height': '24px' }">
-                        <el-image :src="'chrome://favicon/size/24@1px/' + site.url" style="width: 24px; height: 24px" fit="fit"></el-image>
-                        <span class="title">{{ site.title }}</span>
-                    </el-card>
-                </el-link>
-            </el-col>
-        </el-row>
+        <div v-for="(folder, i) in folders" :key="i">
+            <el-divider content-position="left">
+                <div class="folder-title" @click="toggleFolder(i)">{{ folder.title }}</div>
+            </el-divider>
+            <el-collapse-transition>
+                <el-row :gutter="10" v-show="folder.show">
+                    <el-col :span="3" v-for="(site, i) in folder.sites" :key="i" style="text-align: center">
+                        <a :href="site.url" :title="site.title">
+                            <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                                <el-image :src="'chrome://favicon/size/' + faviconSize + '@1px/' + site.url" fit="fit"></el-image>
+                                <el-button type="text" size="mini">{{ site.title }}</el-button>
+                            </el-card>
+                        </a>
+                    </el-col>
+                </el-row>
+            </el-collapse-transition>
+        </div>
     </el-card>
 </template>
 
 <script>
-import {Card, Link, Row, Col, Image} from 'element-ui'
+import {Card, Link, Row, Col, Image, Button, Divider} from 'element-ui'
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
+
 export default {
     components: {
         [Card.name]: Card,
@@ -22,14 +31,19 @@ export default {
         [Row.name]: Row,
         [Col.name]: Col,
         [Image.name]: Image,
+        [Button.name]: Button,
+        [Divider.name]: Divider,
+        [CollapseTransition.name]: CollapseTransition,
     },
     data () {
         return {
-            sites: [],
-            folderDict: {},
+            folders: [],
+            faviconSize: 32,
         }
     },
-    props: ['cardOpacity'],
+    props: {
+        cardOpacity: Number,
+    },
     mounted() {
         this.getTree()
     },
@@ -39,33 +53,54 @@ export default {
                 bookmarks.forEach((bookmark) => {
                     // console.log(bookmark, this.folderDict)
                     if (bookmark.children) {
-                        this.folderDict[bookmark['id']] = bookmark['title']
+                        let fid = this.folders.findIndex(i => i.id === bookmark.id)
+                        if (fid === -1) {
+                            this.folders.push({
+                                id: bookmark.id,
+                                title: bookmark.title,
+                                show: true,
+                                sites: [],
+                            })
+                        }
                         scanTree(bookmark.children)
                     } else {
-                        if (bookmark['parentId']) {
-                            let parentTitle = this.folderDict[parseInt(bookmark['parentId'])]
-                            if (!['Bookmarks'].includes(parentTitle)) {
-                                bookmark['parentTitle'] = parentTitle
-                            }
+                        let fid = this.folders.findIndex(i => i.id === bookmark.parentId)
+                        if (fid !== -1) {
+                            this.folders[fid].sites.push(bookmark)
                         }
-                        this.sites.push(bookmark)
                     }
                 })
             }
 
             chrome.bookmarks.getTree((bookmarks) => {
                 scanTree(bookmarks)
+
+                chrome.topSites.get(results => {
+                    this.folders.unshift({
+                        id: 100,
+                        title: 'Top Sites',
+                        show: true,
+                        sites: results,
+                    })
+                    
+                    this.folders = this.folders.filter(f => f.sites.length)
+                })
             })
         },
-    },
-    filters: {
-        fullTitle: function(value) {
-            return (value.parentTitle ? (value.parentTitle + ' - ') : '') + value.title
+        toggleFolder(i) {
+            this.folders[i].show = !this.folders[i].show
         }
-    }
+    },
 }
 </script>
 
 <style lang="stylus" scoped>
+.el-divider--horizontal
+    margin 20px 0
 
+.folder-title
+    cursor pointer
+
+.el-col
+    margin-bottom 3px
 </style>
