@@ -9,8 +9,11 @@
             </el-tab-pane>
             <el-tab-pane name="search">
                 <span slot="label"><i class="el-icon-search"></i></span>
-                <el-input placeholder="Type something" :prefix-icon="'el-icon-' + (search.loading ? 'loading' : 'search')" v-model="search.query" @change="getQueryNews" size="small" class="search-input" clearable></el-input>
+                <el-input placeholder="Type something" :prefix-icon="'el-icon-' + (search.loading ? 'loading' : 'search')" v-model="search.query" @change="getQueryNews(1)" size="small" class="search-input" clearable></el-input>
                 <article-group :articles="search.articles" :cols="articleColNum"></article-group>
+                <div class="load-more" v-show="search.currentPage >= 1">
+                    <el-button type="text" @click="loadMore()">Load more</el-button>
+                </div>
             </el-tab-pane>
         </el-tabs>
     </el-card>
@@ -58,6 +61,7 @@ export default {
                 loading: false,
                 query: '',
                 articles: [],
+                currentPage: 0,
             },
         }
     },
@@ -91,20 +95,35 @@ export default {
                     })
             }
         },
-        getQueryNews() {
+        getQueryNews(page = 1) {
             if (!this.search.query || this.search.query === '') {
                 this.$set(this.search, 'loading', false)
                 this.$set(this.search, 'articles', [])
+                this.$set(this.search, 'currentPage', 0)
                 return
             }
+
+            let pageSize = 15
+            this.$set(this.search, 'currentPage', page)
+
             this.$set(this.search, 'loading', true)
-            axios.get(`https://newsapi.org/v2/everything?language=${NEWSAPI_LANGUAGE}&q=${this.search.query}&apiKey=${NEWSAPI_KEY}&pageSize=15`)
+            axios.get(`https://newsapi.org/v2/everything?language=${NEWSAPI_LANGUAGE}&q=${this.search.query}&apiKey=${NEWSAPI_KEY}&pageSize=${pageSize}&page=${page}`)
                 .then(res => {
                     // console.log(res)
                     this.$set(this.search, 'loading', false)
-                    this.$set(this.search, 'articles', res.data.articles)
+                    let articles = res.data.articles
+                    if (page === 1) {
+                        this.$set(this.search, 'articles', articles)
+                    } else {
+                        this.search.articles = this.search.articles.concat(articles)
+                        this.$set(this.search, 'articles', this.search.articles)
+                    }
                 })
-        }
+        },
+        loadMore() {
+            this.$set(this.search, 'currentPage', ++this.search.currentPage)
+            this.getQueryNews(this.search.currentPage)
+        },
     },
     filters: {
         capitalize: function (value) {
@@ -120,4 +139,9 @@ export default {
 .search-input
     max-width 50%
     margin-bottom 10px
+
+.load-more
+    margin-top 15px
+    width 100%
+    text-align center
 </style>
