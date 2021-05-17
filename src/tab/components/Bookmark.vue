@@ -8,7 +8,7 @@
                 <el-row :gutter="10" v-show="folder.show">
                     <el-col :span="3" v-for="(site, j) in folder.sites" :key="j" style="text-align: center">
                         <a :href="site.url" :title="site.title">
-                            <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                            <el-card :body-style="{ padding: '2px 1px' }" shadow="hover">
                                 <el-image :src="'chrome://favicon/size/' + faviconSize + '@1px/' + site.url" :style="{'min-height': faviconSize + 'px'}" fit="fit"></el-image>
                                 <el-button type="text" size="mini">{{ site.title }}</el-button>
                             </el-card>
