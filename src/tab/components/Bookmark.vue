@@ -1,5 +1,5 @@
 <template>
-    <el-card shadow="hover" :style="{opacity: cardOpacity}">
+    <el-card shadow="hover" :style="{opacity: cardOpacity}" :body-style="cardBodyStyle">
         <div v-for="(folder, i) in folders" :key="i">
             <el-divider content-position="left">
                 <div :class="{'folder-title': canToggleFolder(i)}" class="noselect" @click="toggleFolder(i)">{{ folder.title }}</div>
@@ -39,14 +39,20 @@ export default {
         return {
             folders: [],
             faviconSize: 24,
-            alwaysShowFolderNames: ['Top Sites', "Bookmarks"]
+            alwaysShowFolderNames: ['Top Sites', "Bookmarks"],
+            cardBodyStyle: {},
         }
     },
     props: {
         cardOpacity: Number,
+        cardMaxHeight: String,
     },
     mounted() {
         this.getTree()
+        this.cardBodyStyle = {
+            'max-height': this.cardMaxHeight,
+            'overflow-y': 'scroll',
+        }
     },
     methods: {
         getTree() {

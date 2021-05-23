@@ -9,7 +9,7 @@
                     <el-row :gutter="10">
                         <el-col :span="9">
                             <div>
-                                <bookmark :cardOpacity="settings.bookmark.cardOpacity"></bookmark>
+                                <bookmark :cardOpacity="settings.bookmark.cardOpacity" :cardMaxHeight="settings.bookmark.cardMaxHeight"></bookmark>
                             </div>
                             <div style="margin-top: 10px">
                                 <goodreads :cardOpacity="settings.goodreads.cardOpacity" :carouselInterval="settings.goodreads.carouselInterval" :cacheTimeout="settings.goodreads.cacheTimeout"></goodreads>
@@ -48,6 +48,7 @@ const DEFAULT_SETTINGS = {
     },
     bookmark: {
         cardOpacity: 0.85,
+        cardMaxHeight: '400px',
     },
     topSites: {
         limit: 10,

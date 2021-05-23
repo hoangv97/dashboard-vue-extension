@@ -136,6 +136,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+>>> .el-tabs__content
+    max-height 575px
+    overflow-y scroll
+
 .search-input
     max-width 50%
     margin-bottom 10px
