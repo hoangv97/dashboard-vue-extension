@@ -64,8 +64,8 @@ const DEFAULT_SETTINGS = {
     },
     news: {
         cardOpacity: 0.9,
-        cacheTimeout: 30 * 60 * 1000,
-    }
+        cacheTimeout: 60 * 60 * 1000,
+    },
 }
 const SETTINGS_STORAGE_KEY = 'settings'
 
