@@ -48,7 +48,7 @@ const DEFAULT_SETTINGS = {
     },
     bookmark: {
         cardOpacity: 0.85,
-        cardMaxHeight: '400px',
+        cardMaxHeight: '300px',
     },
     topSites: {
         limit: 10,
@@ -120,6 +120,6 @@ export default {
     z-index 999
 
 .main
-    padding 25px 5%
+    padding 25px 3%
     max-height calc(100vh - 30px)
 </style>
