@@ -1,7 +1,7 @@
 
 const NOTION_BASE_URL = 'https://notion.so/'
 
-const API_URL_PREFIX = 'https://vh-tracker.herokuapp.com/api/'
+const API_URL_PREFIX = 'https://vh-django.herokuapp.com/api/v1/'
 const API_ACCESS_TOKEN = 'e28c7c23nsdhx87d32xd92x239dh23d87238x72'
 
 
@@ -35,7 +35,7 @@ chrome.contextMenus.create({
         if (info['mediaType'] === 'image') {
             data['image'] = info['srcUrl'];
         }
-        let response = await fetch(`${API_URL_PREFIX}dashboard/cards`, {
+        let response = await fetch(`${API_URL_PREFIX}dashboard/cards/`, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -48,36 +48,6 @@ chrome.contextMenus.create({
         const pageId = response.id.replaceAll('-', '');
         const url = `${NOTION_BASE_URL}${databaseId}?p=${pageId}`;
         chrome.tabs.create({url});
-    }
-});
-
-chrome.contextMenus.create({
-    title: 'Focus Mode',
-    contexts: ['all'],
-    onclick: async (info, tab) => {
-        let response = await fetch(`${API_URL_PREFIX}flashcard/settings`);
-        response = await response.json();
-        let focusMode = false;
-        const focusModeItem = (response || []).find(item => item.Key === 'focusMode');
-        if (focusModeItem) {
-            focusMode = focusModeItem.Value == 1;
-        }
-        
-        const message = focusMode ? 'Disable?' : 'Enable?';
-        if (confirm(message)) {
-            const data = {
-                key: 'focusMode',
-                value: focusMode ? '0' : '1',
-            };
-            fetch(`${API_URL_PREFIX}flashcard/settings`, {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': API_ACCESS_TOKEN,
-                }
-            });
-        }
     }
 });
 
