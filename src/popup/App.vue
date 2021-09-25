@@ -10,12 +10,9 @@
             </el-menu-item>
         </el-menu>
         <div v-if="activeMenuId == 1">
-            <script-executor></script-executor>
-        </div>
-        <div v-if="activeMenuId == 2">
             <giphy tags="cat,dog"></giphy>
         </div>
-        <div v-if="activeMenuId == 3">
+        <div v-if="activeMenuId == 2">
             <cookie></cookie>
         </div>
     </el-container>
@@ -27,7 +24,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/base.css'
 
 import Giphy from './components/Giphy'
-import ScriptExecutor from './components/script_executor/Main.vue'
 import Cookie from './components/Cookie'
 
 export default {
@@ -37,16 +33,11 @@ export default {
         [MenuItem.name]: MenuItem,
 
         Giphy,
-        ScriptExecutor,
         Cookie,
     },
     data () {
         return {
             menuItems: [
-                {
-                    name: 'Scripts',
-                    icon: 's-data',
-                },
                 {
                     name: 'Pet Gif',
                     icon: 'menu',
@@ -56,7 +47,7 @@ export default {
                     icon: 's-home',
                 },
             ],
-            activeMenuId: '2',
+            activeMenuId: '1',
         }
     },
     methods: {
@@ -69,7 +60,7 @@ export default {
 
 <style lang="stylus" scoped>
 .container
-    min-width 700px
+    min-width 800px
     padding 10px 20px 20px 20px
 
 .el-menu

@@ -17,6 +17,9 @@
                         </el-col>
                         <el-col :span="15">
                             <news :cardOpacity="settings.news.cardOpacity" :cacheTimeout="settings.news.cacheTimeout"></news>
+                            <div style="margin-top: 10px">
+                                <script-executor></script-executor>
+                            </div>
                         </el-col>
                     </el-row>
                 </el-main>
@@ -38,6 +41,8 @@ import TopSites from './components/TopSites'
 import Reminder from './components/Reminder'
 import Goodreads from './components/Goodreads'
 import News from './components/news/Main'
+import ScriptExecutor from './components/script_executor/Main.vue'
+
 
 const DEFAULT_SETTINGS = {
     isShowContent: false,
@@ -83,6 +88,7 @@ export default {
         Reminder,
         Goodreads,
         News,
+        ScriptExecutor,
     },
     data () {
         return {

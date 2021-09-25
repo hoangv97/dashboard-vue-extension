@@ -1,46 +1,49 @@
 <template>
-    <div>
+    <el-card shadow="hover" :style="{opacity: cardOpacity}">
         <div v-show="!isShowEditScriptForm">
             <el-button @click="showAddScriptForm" type="text">Add script</el-button>
-            <div v-show="isShowAddScriptForm">
+            <div v-if="isShowAddScriptForm">
                 <script-model type="add" @onSubmit="onAddScriptSubmit"></script-model>
             </div>
             <el-table :data="tableData" stripe style="width: 100%">
-                <el-table-column fixed prop="url" label="URL" width="150"></el-table-column>
-                <el-table-column prop="lang" label="Lang" width="100"></el-table-column>
-                <el-table-column prop="code" label="Code" width="120"></el-table-column>
-                <el-table-column prop="desc" label="Desc" width="120"></el-table-column>
-                <el-table-column fixed="right" label="Operations" width="150">
+                <el-table-column type="expand" width="50">
+                    <template slot-scope="props">
+                        <pre style="max-height: 300px; overflow: scroll">{{ props.row.code }}</pre>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="enabled" label="" width="50">
                     <template slot-scope="scope">
-                        <el-button @click.native.prevent="runScriptRow(scope.$index)" type="text" size="small">Run</el-button>
-                        <el-button @click.native.prevent="duplicateRow(scope.$index)" type="text" size="small">Duplicate</el-button>
+                        <i v-show="scope.row.enabled" class="el-icon-circle-check"></i>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="url" label="URL"></el-table-column>
+                <el-table-column prop="lang" label="Lang" width="100"></el-table-column>
+                <!-- <el-table-column prop="code" label="Code" width="120"></el-table-column> -->
+                <el-table-column prop="desc" label="Desc" width="200"></el-table-column>
+                <el-table-column label="Operations" width="210">
+                    <template slot-scope="scope">
                         <el-button @click.native.prevent="editRow(scope.$index)" type="text" size="small">Edit</el-button>
-                        <el-button @click.native.prevent="removeRow(scope.$index)" type="text" size="small">Remove</el-button>
+                        <el-button @click.native.prevent="copyCodeRow(scope.$index)" type="text" size="small">Copy</el-button>
+                        <el-button @click.native.prevent="duplicateRow(scope.$index)" type="text" size="small">Duplicate</el-button>
+                        <el-button @click.native.prevent="deleteRow(scope.$index)" type="text" size="small">Delete</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <div v-show="isShowEditScriptForm">
+        <div v-if="isShowEditScriptForm" style="width: 600px">
             <el-button @click="toggleEditScriptForm" type="text">Back</el-button>
             <script-model v-if="editingScriptIndex !== null" type="edit" :edit-script="editingScript" @onSubmit="onEditScriptSubmit"></script-model>
         </div>
-    </div>
+    </el-card>
 </template>
 
 <script>
-import { PrismEditor } from 'vue-prism-editor'
-import 'vue-prism-editor/dist/prismeditor.min.css'
-
-import { highlight, languages } from 'prismjs/components/prism-core'
-import 'prismjs/components/prism-clike'
-import 'prismjs/components/prism-javascript'
-import 'prismjs/themes/prism-tomorrow.css'
-
-import { Table, TableColumn, Button, Form, FormItem, Input, Select, Option, Popconfirm } from 'element-ui'
+import { Card, Table, TableColumn, Button, Form, FormItem, Input, Select, Option, Popconfirm, MessageBox, Message } from 'element-ui'
 import ScriptModel from './ScriptModel'
 
 export default {
     components: {
+        [Card.name]: Card,
         [Table.name]: Table,
         [TableColumn.name]: TableColumn,
         [Button.name]: Button,
@@ -51,7 +54,6 @@ export default {
         [Option.name]: Option,
         [Popconfirm.name]: Popconfirm,
 
-        PrismEditor,
         ScriptModel,
     },
     data () {
@@ -64,16 +66,18 @@ export default {
             editingScriptIndex: null,
         }
     },
-    props: [],
+    props: {
+        cardOpacity: Number,
+    },
     mounted() {
         this.getTableData()
     },
     methods: {
-        getTableData() {
-            this.tableData = this.$helpers.getLocalStorage(this.tableDataKey, [])
+        async getTableData() {
+            this.tableData = await this.$helpers.getSyncStorage(this.tableDataKey, [])
         },
         updateTableData() {
-            this.$helpers.setLocalStorage(this.tableDataKey, this.tableData)
+            this.$helpers.setSyncStorage(this.tableDataKey, this.tableData)
         },
 
         // Add Form
@@ -101,49 +105,33 @@ export default {
         },
 
         // Table Operations
-        runScriptRow(index) {
-            let row = this.tableData[index]
-            this.executeCode(row.code, row.lang)
+        async copyCodeRow(index) {
+            const row = this.tableData[index]
+            const result = await this.$helpers.copyCode(row.code, row.lang)
+            if (result) {
+                Message.success('Copied!')
+            }
         },
         duplicateRow(index) {
-            let row = this.tableData[index]
+            const row = this.tableData[index]
             this.tableData.splice(index, 0, row)
             this.updateTableData()
         },
-        removeRow(index) {
-            this.tableData = this.tableData.filter((v, i) => i != index)
-            this.updateTableData()
-        },
-        
-        // helper
-        executeCode(code, lang) {
-            chrome.tabs.getSelected(null, tab => {
-                if (lang === 'css') {
-                    chrome.tabs.insertCSS(tab.id, {code})
-                } else {
-                    chrome.tabs.executeScript(tab.id, {code})
-                }
+        deleteRow(index) {
+            MessageBox.confirm('This will permanently delete the script. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(() => {
+                this.tableData = this.tableData.filter((v, i) => i != index)
+                this.updateTableData()
+            }).catch(() => {
+                //
             })
-        },
-
-        // deprecated
-        highlighter(code) {
-            return highlight(code, languages.js); // languages.<insert language> to return html with markup
         },
     },
 }
 </script>
 
 <style lang="stylus" scoped>
-.editor 
-    background #2d2d2d
-    color #ccc
-
-    font-family Fira code, Fira Mono, Consolas, Menlo, Courier, monospace
-    font-size 14px
-    line-height 1.5
-    padding 5px
-
-.prism-editor__textarea:focus
-    outline none
 </style>

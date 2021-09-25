@@ -1,27 +1,29 @@
+const key = 'ScriptExecutor_TableData';
 
-const API_URL_PREFIX = 'https://vh-tracker.herokuapp.com/api/'
+function executeCode(code, lang) {
+    console.log('exec code', lang, code);
+    if (lang === 'css') {
+        let style = document.createElement('style');
+        style.innerHTML = code;
+        document.head.appendChild(style);
+    } else {
+        eval(code);
+    }
+}
 
-const currentUrl = window.location.href;
+chrome.storage.sync.get(key, function(result) {
+    result = result[key] ? JSON.parse(result[key]).value : [];
 
-const BLOCK_KEYWORDS = [
-    
-];
+    const url = window.location.href;
 
-(async () => {
-    for (const blockKeyword of BLOCK_KEYWORDS) {
-        if(currentUrl.includes(blockKeyword)) {
-            let response = await fetch(`${API_URL_PREFIX}flashcard/settings`);
-            response = await response.json();
-            let focusMode = false;
-            const focusModeItem = (response || []).find(item => item.Key === 'focusMode');
-            if (focusModeItem) {
-                focusMode = focusModeItem.Value == 1;
+    // console.log('content scripts', url, result);
+
+    for (const script of result) {
+        if (script.enabled) {
+            const regex = new RegExp(script.url);
+            if (regex.test(url)) {
+                executeCode(script.code, script.lang);
             }
-            if (focusMode) {
-                window.location.href = 'http://localhost:8080';
-            }
-            break;
         }
     }
-})();
-  
+});

@@ -21,12 +21,10 @@
     "element-theme-dark": "^1.0.3",
     "element-ui": "^2.13.1",
     "nprogress": "^0.2.0",
-    "prismjs": "^1.23.0",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "vue": "^2.6.10",
     "vue-json-viewer": "^2.2.18",
-    "vue-prism-editor": "^1.2.2",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
