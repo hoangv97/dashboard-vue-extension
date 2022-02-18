@@ -109,7 +109,7 @@ export default {
 
 <style lang="stylus" scoped>
 .el-divider--horizontal
-    margin 20px 0
+    margin 16px 0
 
 .folder-title
     cursor pointer
