@@ -55,7 +55,7 @@ import {
 } from 'element-ui';
 import ArticleGroup from './ArticleGroup';
 
-const NEWSAPI_KEY = '09875061c8604df6ad93566a4e876305';
+const { NEWSAPI_KEY } = process.env;
 const NEWSAPI_CATEGORIES = [
   'general',
   'business',

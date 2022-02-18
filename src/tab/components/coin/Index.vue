@@ -29,7 +29,7 @@ import { Card, Button } from 'element-ui';
 import { COINS_CACHE_KEY, BOOKMARKED_COINS_CACHE_KEY } from './config';
 
 const URL_PREFIX = 'https://pro-api.coinmarketcap.com/v1/';
-const CMC_PRO_API_KEY = '2070c869-095c-4bd5-8bda-9b57bb05781e';
+const { CMC_PRO_API_KEY } = process.env;
 const headers = {
   'X-CMC_PRO_API_KEY': CMC_PRO_API_KEY,
 };
@@ -72,7 +72,7 @@ export default {
     getCoins() {
       let result = this.$helpers.getLocalStorage(COINS_CACHE_KEY);
       if (result) {
-        console.log(COINS_CACHE_KEY, result);
+        console.log('cached', COINS_CACHE_KEY, result);
         this.setCoins(result);
       } else {
         axios
