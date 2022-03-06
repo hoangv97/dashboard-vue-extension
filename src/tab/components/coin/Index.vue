@@ -1,7 +1,12 @@
 <template>
-  <el-card :style="{ opacity: cardOpacity }">
+  <el-card :style="{ opacity: cardOpacity }" class="card-container">
     <div class="coins-container">
-      <el-card v-for="(coin, i) in coins" :key="i" shadow="hover">
+      <el-card
+        v-for="(coin, i) in coins"
+        :key="i"
+        shadow="hover"
+        :class="{ bookmarked: coin.bookmarked }"
+      >
         <el-button @click="openDialog(coin)" type="text" size="mini">
           {{ coin.symbol }}
         </el-button>
@@ -61,6 +66,7 @@ export default {
       const _coins = [];
       (result.data.data || []).forEach((coin) => {
         if (bookmarkedCoinKeys.includes(coin.name)) {
+          coin.bookmarked = true;
           coins.push(coin);
         } else {
           _coins.push(coin);
@@ -99,6 +105,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.card-container
+  >>> .el-card__body
+    padding-bottom 5px
+
 .coins-container
   display flex
   flex-direction row
@@ -108,6 +118,9 @@ export default {
   > *
     flex-shrink 0
     margin 0 5px
+
+  // >>> .el-card.bookmarked
+  //   border-color #F56C6C
 
   >>> .el-card__body
     padding 5px 10px
