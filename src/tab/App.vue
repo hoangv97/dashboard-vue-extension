@@ -74,6 +74,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/base.css';
 // import 'element-theme-dark'
 import './css/dark.css';
+import './css/styles.css';
 
 import BackgroundCarousel from './components/BackgroundCarousel';
 import Bookmark from './components/Bookmark';
