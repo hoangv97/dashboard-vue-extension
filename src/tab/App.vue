@@ -18,7 +18,7 @@
                   :cardMaxHeight="settings.bookmark.cardMaxHeight"
                 ></bookmark>
               </div>
-              <div style="margin-top: 10px">
+              <div>
                 <goodreads
                   :cardOpacity="settings.goodreads.cardOpacity"
                   :carouselInterval="settings.goodreads.carouselInterval"
@@ -28,24 +28,27 @@
             </el-col>
             <el-col :span="15">
               <div>
+                <notes :cardOpacity="settings.notes.cardOpacity"></notes>
+              </div>
+              <div>
                 <coin
                   :cardOpacity="settings.coin.cardOpacity"
                   :cacheTimeout="settings.coin.cacheTimeout"
                   @selectCoin="onSelectCoin"
                 ></coin>
               </div>
-              <div style="margin-top: 10px">
+              <div>
                 <news
                   :cardOpacity="settings.news.cardOpacity"
                   :cacheTimeout="settings.news.cacheTimeout"
                 ></news>
               </div>
-              <!-- <div style="margin-top: 10px">
+              <!-- <div>
                 <custom-news
                   :cardOpacity="settings.customNews.cardOpacity"
                 ></custom-news>
               </div> -->
-              <div style="margin-top: 10px">
+              <div>
                 <script-executor
                   :cardOpacity="settings.scriptExecutor.cardOpacity"
                 ></script-executor>
@@ -84,6 +87,7 @@ import Goodreads from './components/Goodreads';
 import News from './components/news';
 import CustomNews from './components/news/Custom';
 import ScriptExecutor from './components/script_executor';
+import Notes from './components/notes';
 import Coin from './components/coin';
 import CoinDialog from './components/coin/Dialog.vue';
 
@@ -93,6 +97,9 @@ const DEFAULT_SETTINGS = {
     interval: 15 * 1000,
     photosNumber: 3,
     cacheTimeout: 1 * 60 * 1000,
+  },
+  notes: {
+    cardOpacity: 0.85,
   },
   bookmark: {
     cardOpacity: 0.85,
@@ -145,6 +152,7 @@ export default {
     ScriptExecutor,
     Coin,
     CoinDialog,
+    Notes,
   },
   data() {
     return {
@@ -179,18 +187,25 @@ export default {
 
 <style lang="stylus" scoped>
 .background-container
-    position fixed
-    width 100%
+  position fixed
+  width 100%
 
 .toggle-content-btn
-    position fixed
-    top 0
-    right 0
-    background transparent
-    border-color transparent
-    z-index 999
+  position fixed
+  top 0
+  right 0
+  background transparent
+  border-color transparent
+  z-index 999
 
 .main
-    padding 10px 3%
-    max-height calc(100vh - 10px)
+  padding 10px 3%
+  max-height calc(100vh - 10px)
+
+>>> .el-col
+  > div
+    margin-top 10px
+
+  > div:first-child
+    margin-top 0
 </style>

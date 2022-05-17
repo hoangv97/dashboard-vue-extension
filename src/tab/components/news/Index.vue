@@ -1,6 +1,6 @@
 <template>
   <el-card :style="{ opacity: cardOpacity }">
-    <el-tabs v-model="activeCategoryName">
+    <el-tabs v-model="activeCategoryName" @tab-click="onChangeTab">
       <el-tab-pane
         v-for="category in categories"
         :key="category.name"
@@ -67,6 +67,7 @@ const NEWSAPI_CATEGORIES = [
 ];
 const NEWSAPI_COUNTRY = 'us';
 const NEWSAPI_LANGUAGE = 'en';
+const ACTIVE_TAB_CACHE_KEY = 'news_active_tab';
 
 export default {
   components: {
@@ -103,12 +104,16 @@ export default {
   },
   props: ['cardOpacity', 'cacheTimeout'],
   mounted() {
+    this.activeCategoryName =
+      this.$helpers.getLocalStorage(ACTIVE_TAB_CACHE_KEY) ||
+      NEWSAPI_CATEGORIES[0];
+
     for (let category of this.categories) {
       setTimeout(
         () => {
           this.getTopHeadlines(category.name);
         },
-        category === this.activeCategoryName ? 0 : 1500
+        category === this.activeCategoryName ? 0 : 500
       ); // load active category first, others later
     }
   },
@@ -170,6 +175,12 @@ export default {
     loadMore() {
       this.$set(this.search, 'currentPage', ++this.search.currentPage);
       this.getQueryNews(this.search.currentPage);
+    },
+    onChangeTab() {
+      this.$helpers.setLocalStorage(
+        ACTIVE_TAB_CACHE_KEY,
+        this.activeCategoryName
+      );
     },
   },
   filters: {
