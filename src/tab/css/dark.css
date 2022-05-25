@@ -2318,4 +2318,11 @@ https://github.com/Arattian/element-theme-dark
       opacity: 0;
     }
   }
+
+  .el-drawer {
+    background: #222933;
+  }
+  .el-drawer__header {
+    color: #ccc
+  }
 }

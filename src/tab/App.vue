@@ -59,7 +59,13 @@
       </el-container>
     </transition>
     <el-button
-      class="toggle-content-btn"
+      class="left-btn settings-btn"
+      icon="el-icon-s-operation"
+      circle
+      @click="drawer = true"
+    ></el-button>
+    <el-button
+      class="left-btn view-btn"
       icon="el-icon-view"
       circle
       @click="toggleContent()"
@@ -68,11 +74,12 @@
       :coin="selectedCoin"
       :visible="coinDialogVisible"
     ></coin-dialog>
+    <el-drawer title="Settings" :visible.sync="drawer"> </el-drawer>
   </div>
 </template>
 
 <script>
-import { Container, Main, Row, Col, Button } from 'element-ui';
+import { Container, Main, Row, Col, Button, Drawer } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/base.css';
 // import 'element-theme-dark'
@@ -91,48 +98,8 @@ import Notes from './components/notes';
 import Coin from './components/coin';
 import CoinDialog from './components/coin/Dialog.vue';
 
-const DEFAULT_SETTINGS = {
-  isShowContent: true,
-  backgroundCarousel: {
-    interval: 15 * 1000,
-    photosNumber: 3,
-    cacheTimeout: 1 * 60 * 1000,
-  },
-  notes: {
-    cardOpacity: 0.85,
-  },
-  bookmark: {
-    cardOpacity: 0.85,
-    cardMaxHeight: '400px',
-  },
-  topSites: {
-    limit: 10,
-    cardOpacity: 0.85,
-  },
-  reminder: {
-    cardOpacity: 0.85,
-  },
-  goodreads: {
-    carouselInterval: 10 * 1000,
-    cardOpacity: 0.9,
-    cacheTimeout: 60 * 60 * 1000,
-  },
-  news: {
-    cardOpacity: 0.9,
-    cacheTimeout: 60 * 60 * 1000,
-  },
-  customNews: {
-    cardOpacity: 0.9,
-  },
-  scriptExecutor: {
-    cardOpacity: 0.9,
-  },
-  coin: {
-    cardOpacity: 0.9,
-    cacheTimeout: 60 * 60 * 1000,
-  },
-};
-const SETTINGS_STORAGE_KEY = 'settings';
+import { getLocalStorage, setLocalStorage } from './lib/helper';
+import { DEFAULT_SETTINGS, SETTINGS_STORAGE_KEY } from './lib/settings';
 
 export default {
   components: {
@@ -141,6 +108,7 @@ export default {
     [Row.name]: Row,
     [Col.name]: Col,
     [Button.name]: Button,
+    [Drawer.name]: Drawer,
 
     BackgroundCarousel,
     Bookmark,
@@ -156,13 +124,14 @@ export default {
   },
   data() {
     return {
-      settings: this.$helpers.getLocalStorage(
-        SETTINGS_STORAGE_KEY,
-        DEFAULT_SETTINGS
-      ),
+      drawer: false,
+      settings: DEFAULT_SETTINGS,
       coinDialogVisible: false,
       selectedCoin: {},
     };
+  },
+  mounted() {
+    this.settings = getLocalStorage(SETTINGS_STORAGE_KEY, DEFAULT_SETTINGS);
   },
   methods: {
     toggleContent() {
@@ -177,7 +146,7 @@ export default {
     settings: {
       handler: function(newSettings) {
         // console.log(newSettings)
-        this.$helpers.setLocalStorage(SETTINGS_STORAGE_KEY, newSettings);
+        setLocalStorage(SETTINGS_STORAGE_KEY, newSettings);
       },
       deep: true,
     },
@@ -190,13 +159,16 @@ export default {
   position fixed
   width 100%
 
-.toggle-content-btn
+.left-btn
   position fixed
   top 0
   right 0
   background transparent
   border-color transparent
   z-index 999
+
+.view-btn
+  top 40px
 
 .main
   padding 10px 3%

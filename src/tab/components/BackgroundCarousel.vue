@@ -3,10 +3,10 @@
     <el-carousel-item v-for="photo in photos" :key="photo.id">
       <div :style="{ 'background-image': `url('${photo._url}')` }" class="img">
         <el-button
-          class="dl-btn"
-          icon="el-icon-download"
+          class="link-btn"
+          icon="el-icon-picture"
           circle
-          @click="download(photo._download_url)"
+          @click="openWindow(photo.links.html)"
         ></el-button>
       </div>
     </el-carousel-item>
@@ -43,9 +43,9 @@ export default {
       });
     },
     /*
-        Unsplash API            
-        Get random photos
-        */
+      Unsplash API    
+      Get random photos
+      */
     getRandomPhotos(number) {
       let cacheKey = 'bgCarousel';
       let cacheTimeout = this.cacheTimeout || 1000;
@@ -73,24 +73,27 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
+    openWindow(url) {
+      window.open(url, '_blank');
+    },
   },
 };
 </script>
 
 <style lang="stylus" scoped>
 .el-carousel
+  height 100vh
+
+  .el-carousel__item
     height 100vh
 
-    .el-carousel__item
-        height 100vh
+    .img
+      width 100%
+      height 100%
+      background-size cover
 
-        .img
-            width 100%
-            height 100%
-            background-size cover
-
-        .dl-btn
-            background transparent
-            border-color transparent
-            z-index 999
+    .link-btn
+      background transparent
+      border-color transparent
+      position absolute
 </style>
