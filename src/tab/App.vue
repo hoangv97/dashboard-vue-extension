@@ -98,7 +98,7 @@ import Notes from './components/notes';
 import Coin from './components/coin';
 import CoinDialog from './components/coin/Dialog.vue';
 
-import { getLocalStorage, setLocalStorage } from './lib/helper';
+import helper from './lib/helper';
 import { DEFAULT_SETTINGS, SETTINGS_STORAGE_KEY } from './lib/settings';
 
 export default {
@@ -131,7 +131,10 @@ export default {
     };
   },
   mounted() {
-    this.settings = getLocalStorage(SETTINGS_STORAGE_KEY, DEFAULT_SETTINGS);
+    this.settings = helper.getLocalStorage(
+      SETTINGS_STORAGE_KEY,
+      DEFAULT_SETTINGS
+    );
   },
   methods: {
     toggleContent() {
@@ -146,7 +149,7 @@ export default {
     settings: {
       handler: function(newSettings) {
         // console.log(newSettings)
-        setLocalStorage(SETTINGS_STORAGE_KEY, newSettings);
+        helper.setLocalStorage(SETTINGS_STORAGE_KEY, newSettings);
       },
       deep: true,
     },

@@ -20,15 +20,39 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
-  title: 'Open in VSCode',
+  title: 'Save to Notion Reading',
   contexts: ['page'],
   onclick: function(page) {
     const url = new URL(page.pageUrl);
-    if (url.hostname.includes('github.com')) {
-      chrome.tabs.create({
-        url: `https://vscode.dev/github${url.pathname}`,
+    fetch(
+      `https://mysrs.netlify.app/.netlify/functions/cors?url=https://api.notion.com/v1/blocks/${process.env.NOTION_READING_ID}/children`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Notion-Version': '2022-06-28',
+          Authorization: `Bearer ${process.env.NOTION_DASHBOARD_TOKEN}`,
+        },
+        body: JSON.stringify({
+          children: [
+            {
+              object: 'block',
+              type: 'bookmark',
+              bookmark: { url },
+            },
+          ],
+        }),
+      }
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        alert('Success');
+      })
+      .catch((error) => {
+        alert(error);
       });
-    }
   },
 });
 

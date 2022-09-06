@@ -1,9 +1,5 @@
 <template>
-  <el-card
-    shadow="hover"
-    :style="{ opacity: cardOpacity }"
-    :body-style="cardBodyStyle"
-  >
+  <el-card shadow="hover" :style="{ opacity: cardOpacity }">
     <el-input
       type="textarea"
       :autosize="{ minRows: 3 }"
@@ -49,6 +45,10 @@ export default {
 >>> .el-card__body
   padding 0
 
+>>> .el-textarea
+  background-color transparent
+
 >>> .el-textarea__inner
   border none
+  background-color transparent
 </style>

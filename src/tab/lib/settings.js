@@ -1,7 +1,7 @@
 export const SETTINGS_STORAGE_KEY = 'settings';
 
 export const DEFAULT_SETTINGS = {
-  isShowContent: true,
+  isShowContent: false,
   backgroundCarousel: {
     interval: 15 * 1000,
     photosNumber: 3,
