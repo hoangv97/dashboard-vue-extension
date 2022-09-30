@@ -53,6 +53,9 @@
                   :cardOpacity="settings.scriptExecutor.cardOpacity"
                 ></script-executor>
               </div>
+              <div>
+                <Popup :cardOpacity="settings.popup.cardOpacity"></Popup>
+              </div>
             </el-col>
           </el-row>
         </el-main>
@@ -95,6 +98,7 @@ import News from './components/news';
 import CustomNews from './components/news/Custom';
 import ScriptExecutor from './components/script_executor';
 import Notes from './components/notes';
+import Popup from './components/popup';
 import Coin from './components/coin';
 import CoinDialog from './components/coin/Dialog.vue';
 
@@ -121,6 +125,7 @@ export default {
     Coin,
     CoinDialog,
     Notes,
+    Popup,
   },
   data() {
     return {

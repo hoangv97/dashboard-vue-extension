@@ -10,6 +10,9 @@ export const DEFAULT_SETTINGS = {
   notes: {
     cardOpacity: 0.85,
   },
+  popup: {
+    cardOpacity: 0.85,
+  },
   bookmark: {
     cardOpacity: 0.85,
     cardMaxHeight: '400px',

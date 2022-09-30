@@ -11,7 +11,7 @@
 <script>
 import { Card, Input } from 'element-ui';
 
-const INPUT_KEY = 'notes_input';
+const INPUT_KEY = 'Popup_Config_Key';
 
 export default {
   components: {
