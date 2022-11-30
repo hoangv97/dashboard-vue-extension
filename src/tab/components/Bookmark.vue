@@ -25,9 +25,7 @@
             <a :href="site.url" :title="site.title">
               <el-card :body-style="{ padding: '2px 1px' }" shadow="hover">
                 <el-image
-                  :src="
-                    'chrome://favicon/size/' + faviconSize + '@1px/' + site.url
-                  "
+                  :src="'chrome://favicon/size/' + faviconSize + '/' + site.url"
                   :style="{ 'min-height': faviconSize + 'px' }"
                   fit="fit"
                 ></el-image>
