@@ -1,6 +1,6 @@
 {
-    "name": "GohanVt",
-    "description": "A Vue.js web extension",
+    "name": "Ultron",
+    "description": "Ultron",
     "version": null,
     "manifest_version": 2,
     "icons": {
@@ -9,7 +9,7 @@
         "128": "icons/icon.png"
     },
     "browser_action": {
-        "default_title": "GohanVt",
+        "default_title": "Ultron",
         "default_popup": "popup/popup.html"
     },
     "chrome_url_overrides": {
