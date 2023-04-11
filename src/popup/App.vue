@@ -10,10 +10,10 @@
         <span>{{ item.name }}</span>
       </el-menu-item>
     </el-menu>
-    <div v-if="activeMenuId == 1" style="width: 100%">
+    <!-- <div v-if="activeMenuId == 1" style="width: 100%">
       <ai-prompts></ai-prompts>
-    </div>
-    <div v-if="activeMenuId == 2">
+    </div> -->
+    <div v-if="activeMenuId == 1">
       <giphy tags="cat,dog"></giphy>
       <!-- <cookie></cookie> -->
     </div>
@@ -42,10 +42,10 @@ export default {
   data() {
     return {
       menuItems: [
-        {
-          name: 'AI prompts',
-          icon: 'user',
-        },
+        // {
+        //   name: 'AI prompts',
+        //   icon: 'user',
+        // },
         {
           name: 'Pet Gif',
           icon: 'menu',

@@ -15,7 +15,7 @@
 import axios from 'axios';
 import { Button } from 'element-ui';
 
-const GIPHY_API = '6mlq70APvD72Bm77rqmkVrmttclKv9JU';
+const { GIPHY_API_KEY } = process.env;
 
 export default {
   components: {
@@ -46,7 +46,7 @@ export default {
       this.loading = true;
       axios
         .get(
-          `https://api.giphy.com/v1/gifs/random?api_key=${GIPHY_API}&tag=${tag}`
+          `https://api.giphy.com/v1/gifs/random?api_key=${GIPHY_API_KEY}&tag=${tag}`
         )
         .then((res) => {
           // console.log(res)

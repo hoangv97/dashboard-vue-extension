@@ -122,21 +122,21 @@ function createPopup() {
   }
 }
 
-chrome.storage.sync.get(POPUP_KEY, function(result) {
-  result = result[POPUP_KEY]
-    ? JSON.parse(result[POPUP_KEY])
-        .value.split('\n')
-        .filter((v) => v)
-    : [];
-  const url = window.location.href;
-  console.log('content scripts', url, result);
-  for (const website of result) {
-    const regex = new RegExp(website);
-    if (regex.test(url)) {
-      createPopup();
-    }
-  }
-});
+// chrome.storage.sync.get(POPUP_KEY, function(result) {
+//   result = result[POPUP_KEY]
+//     ? JSON.parse(result[POPUP_KEY])
+//         .value.split('\n')
+//         .filter((v) => v)
+//     : [];
+//   const url = window.location.href;
+//   console.log('content scripts', url, result);
+//   for (const website of result) {
+//     const regex = new RegExp(website);
+//     if (regex.test(url)) {
+//       createPopup();
+//     }
+//   }
+// });
 
 /**
  * Script Execution
